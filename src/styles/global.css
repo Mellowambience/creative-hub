@@ -93,6 +93,14 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height
 .card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
 .tag { font-size: 0.72rem; padding: 3px 9px; border-radius: 999px; background: rgba(167, 139, 250, 0.1); border: 1px solid var(--line); color: var(--ink-dim); font-family: var(--font-mono); }
 .card .play { margin-top: 16px; font-weight: 600; color: var(--violet-bright); }
+.card .thumb { display: block; margin: -22px -22px 0; border-bottom: 1px solid var(--line); background: #0a0716; aspect-ratio: 16 / 9; overflow: hidden; }
+.card .thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.92; transition: opacity 0.2s ease, transform 0.3s ease; }
+.card:hover .thumb img { opacity: 1; transform: scale(1.03); }
+
+/* screenshot gallery on detail pages */
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin: 22px 0; }
+.gallery .shot { width: 100%; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.trailer { margin: 22px 0; }
 
 /* status chip */
 .status { position: absolute; top: 16px; right: 16px; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); }

@@ -13,8 +13,8 @@ longDescription: |
 techStack: [HTML5 Canvas, JavaScript, Web Audio, Procedural Generation]
 repoUrl: https://github.com/Mellowambience/pet-grave
 liveUrl: https://mellowambience.github.io/pet-grave/
-screenshots: []
-trailer: https://mellowambience.github.io/pet-grave/
+screenshots: [pet-grave/title.png]
+trailer: ""
 role: Solo developer — design, systems, art direction, audio
 year: 2026
 tags: [game, browser, cozy-horror, roguelite-lite, single-file]

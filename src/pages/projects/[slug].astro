@@ -11,6 +11,14 @@ interface Props { project: CollectionEntry<'projects'>; }
 const { project } = Astro.props;
 const { data } = project;
 const statusLabel = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+
+// Resolve screenshots: absolute URLs pass through; local assets are imported via glob.
+const localImports = import.meta.glob('/src/assets/**/*.{png,jpg,jpeg,webp,gif}', { eager: true, import: 'default' });
+const gallery = (data.screenshots || []).map((shot) => {
+  if (/^https?:\/\//.test(shot)) return shot;
+  const entry = localImports[`/src/assets/${shot}`];
+  return (entry?.src ?? (typeof entry === 'string' ? entry : '')) || '';
+}).filter(Boolean);
 ---
 <Base title={`${data.title} — Aetheria`}>
   <section class="section">
@@ -19,6 +27,18 @@ const statusLabel = data.status.charAt(0).toUpperCase() + data.status.slice(1);
       <span class={`status status-${data.status}`} style="position:static;display:inline-block;margin-bottom:12px">{statusLabel}</span>
       <h1 style="font-size:2.6rem">{data.glyph} {data.title}</h1>
       <p class="lede muted" style="font-size:1.15rem;margin-top:8px">{data.shortDescription}</p>
+
+      {gallery.length > 0 && (
+        <div class="gallery">
+          {gallery.map((src) => <img class="shot" src={src} alt={`${data.title} screenshot`} loading="lazy" />)}
+        </div>
+      )}
+
+      {data.trailer && (
+        <div class="trailer">
+          <video src={data.trailer} controls preload="metadata" style="width:100%;border-radius:14px"></video>
+        </div>
+      )}
 
       <div class="meta-row">
         {data.type && <span class="meta-pill">type · {data.type}</span>}

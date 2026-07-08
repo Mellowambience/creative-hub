@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+
 interface Props { project: CollectionEntry<'projects'>; }
 const { project } = Astro.props;
 const { data } = project;
@@ -7,8 +8,22 @@ const statusClass = `status status-${data.status}`;
 const statusLabel = data.status.charAt(0).toUpperCase() + data.status.slice(1);
 const href = data.liveUrl || `/projects/${project.slug}`;
 const playLabel = data.liveUrl ? (data.status === 'live' ? 'Play it →' : 'Open →') : 'View →';
+
+// Resolve a screenshot path: absolute URL passes through; local asset is imported via glob.
+const shot = data.screenshots?.[0];
+const isLocal = shot && !/^https?:\/\//.test(shot);
+const localImports = isLocal
+  ? import.meta.glob('/src/assets/**/*.{png,jpg,jpeg,webp,gif}', { eager: true, import: 'default' })
+  : {};
+const resolved = localImports[`/src/assets/${shot}`];
+const thumb = isLocal ? (resolved?.src ?? (typeof resolved === 'string' ? resolved : undefined)) : shot;
 ---
 <article class="card reveal">
+  {thumb && (
+    <a class="thumb" href={`/projects/${project.slug}`}>
+      <img src={thumb} alt={`${data.title} screenshot`} loading="lazy" />
+    </a>
+  )}
   <span class={statusClass}>{statusLabel}</span>
   <div class="glyph">{data.glyph}</div>
   <h3>{data.title}</h3>

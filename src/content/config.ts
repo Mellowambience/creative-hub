@@ -14,9 +14,9 @@ const projects = defineCollection({
     techStack: z.array(z.string()).default([]),
     repoUrl: z.string().url().optional(),
     liveUrl: z.string().url().optional(),
-    screenshots: z.array(z.string()).default([]),
-    trailer: z.string().optional(),
-    role: z.string().optional(),
+    screenshots: z.array(z.string()).default([]), // paths under src/assets or absolute URLs
+    trailer: z.string().optional(),               // video/GIF url (YouTube, CDN)
+    role: z.string(),
     year: z.number().optional(),
     tags: z.array(z.string()).default([]),
     maturity: z.enum(['shippable', 'playable', 'rough', 'idea']).default('rough'),
