@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => {
+  const order = { high: 0, medium: 1, low: 2 };
+  return (order[a.data.hiringRelevance] - order[b.data.hiringRelevance]) || (b.data.featured ? 1 : 0);
+});
+const featured = projects.filter((p) => p.data.featured);
+const live = projects.filter((p) => p.data.status === 'live' || p.data.maturity === 'shippable');
+---
+<Base>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="eyebrow">A living archive · game designer · AI builder · systems thinker</div>
+      <h1>Aetheria — the constellation of everything I build.</h1>
+      <p class="lede">
+        I design games you can play right now, AI systems that live on your machine, and
+        magical tools that make creation feel like spellcraft. This is where the worlds
+        meet — polished work, in-progress experiments, and the ideas still forming in the dark.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/projects">Explore the projects →</a>
+        <a class="btn btn-ghost" href="https://mellowambience.github.io/pet-grave/" target="_blank" rel="noopener">Play Pet Grave</a>
+        <a class="btn btn-ghost" href="/about">Who I am</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Featured now</div>
+        <h2>The strongest work, ready to open</h2>
+        <p>Playable games and shipped tools first — the rest lives deeper in the constellation.</p>
+      </div>
+      <div class="grid">
+        {featured.map((p) => <ProjectCard project={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSTELLATION -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Project constellation</div>
+        <h2>See how the worlds connect</h2>
+        <p>Every node is a project. Lines trace shared lineage — agents, worlds, and the tools that build them.</p>
+      </div>
+      <div class="constellation">
+        <svg viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid meet">
+          {/* links: hub -> each (drawn by client script); nodes placed in a ring */}
+          <g id="links"></g>
+          <g id="nodes">
+            {projects.map((p, i) => {
+              const angle = (i / projects.length) * Math.PI * 2 - Math.PI / 2;
+              const cx = 500 + Math.cos(angle) * 380;
+              const cy = 190 + Math.sin(angle) * 140;
+              return (
+                <g class="node" transform={`translate(${cx},${cy})`}>
+                  <circle r="5"></circle>
+                  <text x="10" y="4">{p.data.title}</text>
+                </g>
+              );
+            })}
+            <g class="node" transform="translate(500,190)">
+              <circle r="8" style="fill:var(--gold)"></circle>
+              <text x="12" y="4">Aetheria (hub)</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE NOW -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Live & shippable</div>
+        <h2>Open it and it runs</h2>
+      </div>
+      <div class="grid">
+        {live.map((p) => <ProjectCard project={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING CTA -->
+  <section class="section">
+    <div class="container" style="text-align:center">
+      <h2>Want to build something alive?</h2>
+      <p class="muted">I'm open to collaboration, hiring, and wild experiments.</p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn btn-primary" href="mailto:natorretti11@gmail.com">Email me</a>
+        <a class="btn btn-ghost" href="https://github.com/Mellowambience" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // draw faint links from hub (500,190) to each node
+  const svg = document.querySelector('.constellation svg');
+  const links = svg.querySelector('#links');
+  const nodes = svg.querySelectorAll('#nodes .node');
+  const hub = { x: 500, y: 190 };
+  nodes.forEach((n) => {
+    const t = n.getAttribute('transform').match(/translate\(([^,]+),([^)]+)\)/);
+    if (!t) return;
+    const x = parseFloat(t[1]), y = parseFloat(t[2]);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', hub.x); line.setAttribute('y1', hub.y);
+    line.setAttribute('x2', x); line.setAttribute('y2', y);
+    line.setAttribute('class', 'link');
+    links.appendChild(line);
+  });
+</script>

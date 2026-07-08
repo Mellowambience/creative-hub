@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// Agentic roadmap — the public trajectory of the creator-universe.
+const phases = [
+  { q: 'Now → Q3', title: 'Ship the hub', state: 'live', items: ['This portfolio hub live on GitHub Pages', 'Pet Grave + QI-Games front and center', 'Markdown-driven project system'] },
+  { q: 'Q3', title: 'Playable depth', state: 'prototype', items: ['QI-Games browser build playable end-to-end', 'Goldmaze itch.io release', 'Per-project devlogs wired to the vault'] },
+  { q: 'Q4', title: 'Agentic layers', state: 'concept', items: ['Fairy Council multi-agent mode as a live demo', 'MIST narrative engine exposed as a service', 'Constellation auto-draws from repo telemetry'] },
+  { q: '2027', title: 'Community + sovereign', state: 'concept', items: ['Aetherhaven Hub community layer', 'Local-first accounts; no tracking', 'Open commissions / collaboration door'] },
+];
+---
+<Base title="Roadmap — Aetheria">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Agentic roadmap</div>
+        <h2>Where the universe is heading</h2>
+        <p>A trajectory, not a promise sheet. Each phase ships before the next begins.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px;max-width:760px">
+        {phases.map((p) => (
+          <div class="card reveal" style="flex-direction:row;align-items:flex-start;gap:18px">
+            <span class={`status status-${p.state}`} style="position:static">{p.q}</span>
+            <div>
+              <h3 style="margin:0">{p.title}</h3>
+              <ul class="muted" style="margin:8px 0 0;padding-left:18px">
+                {p.items.map((i) => <li>{i}</li>)}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.status !== 'archived')
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const types = ['game', 'ai-agent', 'creative-tool', 'portfolio', 'experiment'];
+const labels = { game: 'Games', 'ai-agent': 'AI / Agent systems', 'creative-tool': 'Creative tools', portfolio: 'Portfolio', experiment: 'Experiments' };
+---
+<Base title="Projects — Aetheria Constellation">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">The full map</div>
+        <h2>All projects, by kind</h2>
+        <p>Polished work and rough prototypes side by side — each tagged with where it really stands.</p>
+      </div>
+
+      {types.map((t) => {
+        const group = projects.filter((p) => p.data.type === t);
+        if (!group.length) return null;
+        return (
+          <div style="margin-bottom:48px">
+            <h3 style="color:var(--ink-dim);font-family:var(--font-mono);font-size:0.9rem;letter-spacing:0.12em;text-transform:uppercase">{labels[t]}</h3>
+            <div class="grid" style="margin-top:18px">
+              {group.map((p) => <ProjectCard project={p} />)}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,47 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+const { data } = project;
+const statusLabel = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+---
+<Base title={`${data.title} — Aetheria`}>
+  <section class="section">
+    <div class="container prose">
+      <a class="back-link" href="/projects">← All projects</a>
+      <span class={`status status-${data.status}`} style="position:static;display:inline-block;margin-bottom:12px">{statusLabel}</span>
+      <h1 style="font-size:2.6rem">{data.glyph} {data.title}</h1>
+      <p class="lede muted" style="font-size:1.15rem;margin-top:8px">{data.shortDescription}</p>
+
+      <div class="meta-row">
+        {data.type && <span class="meta-pill">type · {data.type}</span>}
+        {data.role && <span class="meta-pill">role · {data.role}</span>}
+        {data.year && <span class="meta-pill">year · {data.year}</span>}
+        {data.maturity && <span class="meta-pill">maturity · {data.maturity}</span>}
+        {data.hiringRelevance && <span class="meta-pill">hiring · {data.hiringRelevance}</span>}
+      </div>
+
+      <div class="cta-row" style="margin:8px 0 24px">
+        {data.liveUrl && <a class="btn btn-primary" href={data.liveUrl} target="_blank" rel="noopener">Play / Open →</a>}
+        {data.repoUrl && <a class="btn btn-ghost" href={data.repoUrl} target="_blank" rel="noopener">Repository</a>}
+      </div>
+
+      {data.longDescription && <div set:html={data.longDescription.replace(/\n/g, '<br/>')} />}
+
+      {data.techStack?.length > 0 && (
+        <><h2>Stack</h2><div class="tags">{data.techStack.map((s) => <span class="tag">{s}</span>)}</div></>
+      )}
+
+      {data.whatILearned && (<><h2>What I learned</h2><p>{data.whatILearned}</p></>)}
+      {data.nextSteps && (<><h2>Next steps</h2><p>{data.nextSteps}</p></>)}
+      {data.tags?.length > 0 && (<><h2>Tags</h2><div class="tags">{data.tags.map((t) => <span class="tag">{t}</span>)}</div></>)}
+    </div>
+  </section>
+</Base>

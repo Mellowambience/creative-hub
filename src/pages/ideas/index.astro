@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+// The Idea Vault = concepts + anything not yet "live/prototype" polished.
+// We show them beautifully but clearly mark them as forming.
+const ideas = (await getCollection('projects')).filter(
+  (p) => p.data.status === 'concept' || p.data.maturity === 'idea' || p.data.maturity === 'rough'
+);
+const concepts = ideas.filter((p) => p.data.status === 'concept');
+const rough = ideas.filter((p) => p.data.status !== 'concept');
+---
+<Base title="Idea Vault — Aetheria">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Living archive</div>
+        <h2>Idea Vault</h2>
+        <p>Unfinished ideas are valuable — they just aren’t polished yet. Here they live openly, marked as <span class="medal">forming</span>, separate from shipped work.</p>
+      </div>
+
+      {concepts.length > 0 && (
+        <div style="margin-bottom:48px">
+          <h3 style="color:var(--gold);font-family:var(--font-mono);font-size:0.9rem;letter-spacing:0.12em">✦ CONCEPTS — forming in the dark</h3>
+          <div class="grid" style="margin-top:18px">
+            {concepts.map((p) => <ProjectCard project={p} />)}
+          </div>
+        </div>
+      )}
+
+      {rough.length > 0 && (
+        <div>
+          <h3 style="color:var(--ink-dim);font-family:var(--font-mono);font-size:0.9rem;letter-spacing:0.12em">⚙ ROUGH PROTOTYPES — real but early</h3>
+          <div class="grid" style="margin-top:18px">
+            {rough.map((p) => <ProjectCard project={p} />)}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

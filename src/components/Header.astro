@@ -1,0 +1,17 @@
+---
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/ideas', label: 'Idea Vault' },
+  { href: '/roadmap', label: 'Roadmap' },
+  { href: '/about', label: 'About' },
+];
+---
+<header class="site-header">
+  <div class="container row">
+    <a class="brand" href="/">✦ <span class="spark">Aetheria</span> · Constellation</a>
+    <nav class="nav">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+  </div>
+</header>
