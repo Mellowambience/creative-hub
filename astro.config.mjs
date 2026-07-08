@@ -1,9 +1,8 @@
 import { defineConfig } from 'astro/config';
 
-// GitHub Pages serves from the user/site root, so base is '/'.
-// If you later host under a subpath, set base: '/creative-hub/'.
+// GitHub Pages serves this repo at /creative-hub/ (project site), so base must match.
 export default defineConfig({
-  base: '/',
+  base: '/creative-hub/',
   site: 'https://mellowambience.github.io',
   prefetch: false,
   compressHTML: true,
